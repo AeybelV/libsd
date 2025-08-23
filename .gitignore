@@ -14,3 +14,5 @@ CMakeUserPresets.json
 build
 build-*
 build_*
+.cache
+.clangd
