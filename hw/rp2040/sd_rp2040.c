@@ -1,3 +1,11 @@
+/**
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2025 Aeybel Varghese
+ *
+ * @file sd_rp2040.c
+ * @brief RP2040 MCU Port
+ */
+
 #include "../../include/bus/sd_spi.h"
 #include "../../include/sd.h"
 #include "../../include/sd_host.h"
@@ -12,16 +20,32 @@
 
 // ========== Helper Functions ==========
 
+/**
+ * @brief Selects the CS pin
+ *
+ * @param ctx SD Host Controller Private Context
+ */
 static inline void cs_select(sd_host_ctx_t *ctx)
 {
     gpio_put(ctx->cs_pin, 0);
 }
 
+/**
+ * @brief Deselects the CS pin
+ *
+ * @param ctx SD Host Controller Private Context
+ */
 static inline void cs_deselect(sd_host_ctx_t *ctx)
 {
     gpio_put(ctx->cs_pin, 1);
 }
 
+/**
+ * @brief Initializes the SPI bus
+ *
+ * @param host SD Host Controller
+ * @return status code
+ */
 sd_status_t init_bus(sd_host_t *host)
 {
     sd_host_ctx_t *ctx = host->ctx;
@@ -43,22 +67,44 @@ sd_status_t init_bus(sd_host_t *host)
 }
 
 // ========== SPI Bus Ops ==========
+// These are provided to the SPI vtbl to use
 
-void select_cs(sd_host_t *host_ctx, bool select)
+/**
+ * @brief Selects the CS pin
+ *
+ * @param host SD Host Controller
+ * @param select Select state
+ */
+void select_cs(sd_host_t *host, bool select)
 {
-    sd_host_ctx_t *ctx = host_ctx->ctx;
+    sd_host_ctx_t *ctx = host->ctx;
+
     if (select)
         cs_select(ctx);
     else
         cs_deselect(ctx);
 }
 
+/**
+ * @brief Sets the SPI bus speed
+ *
+ * @param host SD Host
+ * @param hz SPI clock frequency
+ */
 void set_clock(sd_host_t *host, uint32_t hz)
 {
     sd_host_ctx_t *ctx = host->ctx;
+
     spi_set_baudrate(ctx->spi, hz);
 }
 
+/**
+ * @brief Exchanges one byte over SPI: transmits a byte and receives a byte
+ *
+ * @param host SD Host Controller
+ * @param tx Byte to transmit
+ * @return Byte received
+ */
 uint8_t xchg1(sd_host_t *host, uint8_t tx)
 {
     sd_host_ctx_t *ctx = host->ctx;
@@ -68,12 +114,26 @@ uint8_t xchg1(sd_host_t *host, uint8_t tx)
     return rx;
 }
 
+/**
+ * @brief Writes a buffer over SPI
+ *
+ * @param host SD Host Controller
+ * @param src Source buffer
+ * @param n Number of bytes to write
+ */
 void write(sd_host_t *host, const uint8_t *src, size_t n)
 {
     sd_host_ctx_t *ctx = host->ctx;
     spi_write_blocking(ctx->spi, src, n);
 }
 
+/**
+ * @brief Reads N bytes over SPI by clocking out 0xFF
+ *
+ * @param host SD Host Controller
+ * @param dst Destination buffer to store read data
+ * @param n Number of bytes to read
+ */
 void read_ff(sd_host_t *host, uint8_t *dst, size_t n)
 {
     sd_host_ctx_t *ctx = host->ctx;

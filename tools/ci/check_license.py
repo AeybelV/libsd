@@ -8,7 +8,8 @@ import sys
 import pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-SRC = [ROOT / "include", ROOT / "src"]
+platforms = [p for p in ROOT.glob("hw/*") if p.is_dir()]
+SRC = [ROOT / "include", ROOT / "src"] + platforms
 
 LICENSE_RE = re.compile(r"SPDX-License-Identifier:\s*([A-Za-z0-9\-.+]+)")
 DOXY_RE = re.compile(r"/\*\s*SPDX-License-Identifier:.*?@file\s+.*?\*/", re.S)

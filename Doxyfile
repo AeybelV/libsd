@@ -1,6 +1,6 @@
 PROJECT_NAME           = "libsd"
 OUTPUT_DIRECTORY       = docs
-INPUT                  = include src
+INPUT                  = include src hw
 FILE_PATTERNS          = *.h *.c
 RECURSIVE              = YES
 
