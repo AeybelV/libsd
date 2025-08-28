@@ -1,0 +1,20 @@
+PROJECT_NAME           = "libsd"
+OUTPUT_DIRECTORY       = docs
+INPUT                  = include src hw
+FILE_PATTERNS          = *.h *.c
+RECURSIVE              = YES
+
+EXTRACT_ALL            = NO
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = NO
+
+GENERATE_HTML          = YES
+GENERATE_XML           = YES
+
+WARN_IF_UNDOCUMENTED   = YES
+WARN_IF_DOC_ERROR      = YES
+WARN_NO_PARAMDOC       = YES
+
+WARN_AS_ERROR          = NO
+
+#define SD_HOST_SET_CTX(host_ptr, ctx_ptr)                                                         \
