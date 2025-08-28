@@ -1,0 +1,28 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: mixed-line-ending
+      - id: check-merge-conflict
+
+  - repo: local
+    hooks:
+      - id: clang-format
+        name: clang-format
+        entry: bash -c 'git ls-files "*.c" "*.h" "*.cpp" "*.hpp" | xargs -r clang-format -i && git diff --exit-code'
+        language: system
+        pass_filenames: false
+
+      - id: license-check
+        name: license-check
+        entry: tools/ci/check_license.py
+        language: system
+        files: "\\.(c|h|cpp|hpp)$"
+
+      - id: doxygen-lint
+        name: doxygen-lint
+        entry: bash -c 'doxygen Doxyfile 2>docs/doxygen.warnings && test ! -s docs/doxygen.warnings'
+        language: system
+        pass_filenames: false
