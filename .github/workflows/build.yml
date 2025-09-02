@@ -3,7 +3,7 @@ name: Build
 on:
   pull_request:
   push:
-    branches: [ main, rp2040CI ]
+    branches: [ main ]
 
 jobs:
   discover:
@@ -50,4 +50,29 @@ jobs:
           find build/${{ matrix.id }} -name '*.a' -print -exec arm-none-eabi-size {} \; || true
           find build/${{ matrix.id }} -name '*.a' -print -exec ls -lh {} \; || true
 
+      - name: Copy generated headers into include
+        shell: bash
+        run: |
+          set -euo pipefail
+          src="build/${{ matrix.id }}/generated"
+          dest="include"
 
+          if [ -d "$src" ]; then
+            mkdir -p "$dest"
+            shopt -s nullglob
+            for f in "$src"/*.{h,hpp}; do
+              echo "Copying $f -> $dest/"
+              cp -f "$f" "$dest/"
+            done
+          else
+            echo "::warning::No generated dir at $src (skipping copy)"
+          fi
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: lib-${{ matrix.id }}
+          path: |
+            build/${{ matrix.id }}/**/*.a
+            include/**
+          if-no-files-found: warn

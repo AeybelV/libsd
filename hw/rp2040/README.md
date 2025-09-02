@@ -80,7 +80,7 @@ int main(void) {
 #warning spi example requires a board with SPI pins
   puts("Default SPI pins were not defined");
 #else
-  
+
   // Instantiates host and card struct
   sd_host_t host;
   sd_card_t card;
