@@ -5,6 +5,8 @@ if(NOT DEFINED PICO_SDK_PATH)
   message(FATAL_ERROR "PICO_SDK_PATH must be set for RP2040 backend")
 endif()
 
+message(STATUS "PICO_SDK_PATH = ${PICO_SDK_PATH}")
+
 include(${CMAKE_CURRENT_LIST_DIR}/pico_sdk_import.cmake)
 
 pico_sdk_init()

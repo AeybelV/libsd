@@ -1,0 +1,14 @@
+{
+  "defaults": {
+    "apt": ["gcc-arm-none-eabi", "binutils-arm-none-eabi", "ninja-build", "cmake", "cppcheck"],
+    "cmake_args": ["-DCMAKE_BUILD_TYPE=Release"]
+  },
+  "targets": [
+    {
+      "id": "rp2040",
+      "desc": "Raspberry Pi RP2040 (Pico SDK)",
+      "cmake_args": ["-DTARGET_MCU=rp2040", "-DPICO_SDK_PATH=third_party/pico-sdk"],
+      "sdk": { "method": "git", "repo": "https://github.com/raspberrypi/pico-sdk.git", "ref": "2.2.0", "path": "third_party/pico-sdk", "submodules": true }
+    }
+  ]
+}
