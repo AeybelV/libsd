@@ -5,8 +5,14 @@ set(TARGET_MCU
     "rp2040"
     CACHE STRING "Target MCU family (rp2040, stm32f4, nrf52, ...)")
 
+message(STATUS "libsd")
+message(STATUS "TARGET_MCU = ${TARGET_MCU}")
+
+# Sets GEN_DIR, which will contain generated headers for the target platform
 set(GEN_DIR "${CMAKE_BINARY_DIR}/generated")
 file(MAKE_DIRECTORY "${GEN_DIR}")
+
+# Includes the CMake file for the target platform
 include(${CMAKE_CURRENT_LIST_DIR}/hw/${TARGET_MCU}/family.cmake)
 set(TARGET_MCU_INCLUDES
     "${CMAKE_CURRENT_SOURCE_DIR}/hw/${TARGET_MCU}/libsd_mcu_defs.h")
@@ -18,9 +24,6 @@ project(
   LANGUAGES C CXX)
 
 option(cppcheck "Run CppCheck static code analysis" ON)
-
-message(STATUS "sdlib")
-message(STATUS "TARGET_MCU = ${TARGET_MCU}")
 
 add_library(libsd STATIC src/sd_core.c src/sd_spi.c)
 
@@ -36,3 +39,6 @@ if(cppcheck)
 endif()
 
 target_include_directories(libsd PUBLIC "include" "${GEN_DIR}")
+
+# Remove the lib prefix to prevent duplicate name
+set_target_properties(libsd PROPERTIES PREFIX "")
